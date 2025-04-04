@@ -1,0 +1,80 @@
+.App {
+  padding: 20px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: larger;
+}
+
+.editor-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.left-section {
+  margin-right: 20px;
+  min-width: 200px;
+}
+
+.controls-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.row-count {
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.input-field {
+  flex: 1;
+  padding: 5px;
+}
+
+.remove-button {
+  padding: 5px 10px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.remove-button:hover {
+  opacity: 1;
+}
+
+.replace-button {
+  padding: 5px 10px;
+  width: 100%;
+  margin-top: 10px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.replace-button:hover {
+  opacity: 1;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.add-button {
+  padding: 5px 10px;
+  width: 100%;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.add-button:hover {
+  opacity: 1;
+}
+
+.right-section textarea {
+  width: 95%;
+  padding: 10px;
+}
