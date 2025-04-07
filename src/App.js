@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ControlsSection from './ControlsSection';
 import './App.css';
 
@@ -8,6 +8,13 @@ function App() {
     { id: 1, findText: '', replaceText: '', caseSensitive: false },
     { id: 2, findText: '', replaceText: '', caseSensitive: false },
   ]);
+  const textAreaRef = useRef(null);
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, []);
 
   const updateControl = (id, field, value) => {
     setControls(controls.map(control =>
@@ -64,6 +71,7 @@ function App() {
         </div>
         <div className="right-section">
           <textarea
+            ref={textAreaRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows="15"
