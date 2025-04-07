@@ -4,10 +4,16 @@ import './App.css';
 
 function App() {
   const [text, setText] = useState('');
-  const [controls, setControls] = useState([
-    { id: 1, findText: '', replaceText: '', caseSensitive: false },
-    { id: 2, findText: '', replaceText: '', caseSensitive: false },
-  ]);
+  const [controls, setControls] = useState(() => {
+    const storedControls = localStorage.getItem('controls');
+    return storedControls 
+      ? JSON.parse(storedControls) 
+      : [
+          { id: 1, findText: '', replaceText: '', caseSensitive: false },
+          { id: 2, findText: '', replaceText: '', caseSensitive: false },
+        ];
+  });
+  
   const textAreaRef = useRef(null);
 
   useEffect(() => {
@@ -15,6 +21,11 @@ function App() {
       textAreaRef.current.focus();
     }
   }, []);
+
+  // Save controls to localStorage
+  useEffect(() => {
+    localStorage.setItem('controls', JSON.stringify(controls));
+  }, [controls]);
 
   const updateControl = (id, field, value) => {
     setControls(controls.map(control =>
