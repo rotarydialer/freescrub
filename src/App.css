@@ -17,6 +17,7 @@ h1 {
 .left-section {
   margin-right: 20px;
   min-width: 200px;
+  max-width: 35rem;
 }
 
 .controls-section {
@@ -35,6 +36,7 @@ h1 {
 .input-field {
   flex: 1;
   padding: 5px;
+  min-width: 50px;
 }
 
 .remove-button {
