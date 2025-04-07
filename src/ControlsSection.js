@@ -1,7 +1,7 @@
 import React from 'react';
 
-function ControlsSection({ control, onChange, onRemove, index }) {
-  const { findText, replaceText } = control;
+function ControlsSection({ control, onChange, onRemove, onToggleCase, index }) {
+  const { findText, replaceText, caseSensitive } = control;
 
   return (
     <div className="controls-section">
@@ -20,6 +20,13 @@ function ControlsSection({ control, onChange, onRemove, index }) {
         placeholder="Replace with"
         className="input-field"
       />
+      <button className="case-toggle" onClick={onToggleCase}>
+        <img
+          src="/case-sensitive.svg"
+          alt="Toggle Case Sensitivity"
+          style={{ opacity: caseSensitive ? 1 : 0.3, width: '20px', height: '20px' }}
+        />
+      </button>
       <button className="remove-button" onClick={onRemove}>
         x
       </button>

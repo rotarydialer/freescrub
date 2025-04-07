@@ -5,13 +5,19 @@ import './App.css';
 function App() {
   const [text, setText] = useState('');
   const [controls, setControls] = useState([
-    { id: 1, findText: '', replaceText: '' },
-    { id: 2, findText: '', replaceText: '' },
+    { id: 1, findText: '', replaceText: '', caseSensitive: false },
+    { id: 2, findText: '', replaceText: '', caseSensitive: false },
   ]);
 
   const updateControl = (id, field, value) => {
     setControls(controls.map(control =>
       control.id === id ? { ...control, [field]: value } : control
+    ));
+  };
+
+  const toggleCaseSensitive = (id) => {
+    setControls(controls.map(control =>
+      control.id === id ? { ...control, caseSensitive: !control.caseSensitive } : control
     ));
   };
 
@@ -23,7 +29,8 @@ function App() {
     let newText = text;
     controls.forEach(control => {
       if (control.findText) {
-        const regex = new RegExp(control.findText, 'gi');
+        const flags = control.caseSensitive ? 'g' : 'gi'; // case sensitivity
+        const regex = new RegExp(control.findText, flags);
         newText = newText.replace(regex, control.replaceText);
       }
     });
@@ -31,12 +38,11 @@ function App() {
   };
 
   const addControl = () => {
-    setControls([...controls, { id: Date.now(), findText: '', replaceText: '' }]);
+    setControls([...controls, { id: Date.now(), findText: '', replaceText: '', caseSensitive: false }]);
   };
 
   return (
     <div className="App">
-      <h1>Find and Replace Multiple</h1>
       <div className="editor-container">
         <div className="left-section">
           {controls.map((control, index) => (
@@ -44,6 +50,7 @@ function App() {
               key={control.id}
               control={control}
               onChange={(field, value) => updateControl(control.id, field, value)}
+              onToggleCase={() => toggleCaseSensitive(control.id)}
               onRemove={() => removeControl(control.id)}
               index={index}
             />
