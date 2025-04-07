@@ -74,7 +74,14 @@ h1 {
   opacity: 1;
 }
 
+.right-section {
+  flex: 1;
+  height: calc(100vh - 40px);
+}
+
 .right-section textarea {
-  width: 95%;
+  width: 98%;
   padding: 10px;
+  height: 100%;
+  box-sizing: border-box;
 }
