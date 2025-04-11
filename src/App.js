@@ -56,7 +56,25 @@ function App() {
   };
 
   const addControl = () => {
-    setControls([...controls, { id: Date.now(), findText: '', replaceText: '', caseSensitive: false }]);
+    // default "find" field to highlighted text
+    let selectedText = '';
+    if (textAreaRef.current) {
+      const start = textAreaRef.current.selectionStart;
+      const end = textAreaRef.current.selectionEnd;
+      if (start !== end) {
+        selectedText = text.substring(start, end);
+      }
+    }
+    setControls([
+      ...controls, 
+      { id: Date.now(), findText: selectedText, replaceText: '', caseSensitive: false }
+    ]);
+
+    // clear highlighted text
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+      textAreaRef.current.setSelectionRange(textAreaRef.current.selectionEnd, textAreaRef.current.selectionEnd);
+    }
   };
 
   return (
