@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
-function ControlsSection({ control, onChange, onRemove, onToggleCase, index }) {
+function ControlsSection({ control, onChange, onRemove, onToggleCase, index, autoFocusReplace }) {
   const { findText, replaceText, caseSensitive } = control;
+  const replaceInputRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocusReplace && replaceInputRef.current) {
+      replaceInputRef.current.focus();
+    }
+  }, [autoFocusReplace]);
 
   return (
     <div className="controls-section">
@@ -15,6 +22,7 @@ function ControlsSection({ control, onChange, onRemove, onToggleCase, index }) {
       />
       <input
         type="text"
+        ref={replaceInputRef}
         value={replaceText}
         onChange={(e) => onChange('replaceText', e.target.value)}
         placeholder="Replace with"

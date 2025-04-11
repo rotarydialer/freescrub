@@ -13,7 +13,7 @@ function App() {
           { id: 2, findText: '', replaceText: '', caseSensitive: false },
         ];
   });
-  
+  const [autoFocusControlId, setAutoFocusControlId] = useState(null);
   const textAreaRef = useRef(null);
 
   useEffect(() => {
@@ -56,7 +56,26 @@ function App() {
   };
 
   const addControl = () => {
-    setControls([...controls, { id: Date.now(), findText: '', replaceText: '', caseSensitive: false }]);
+    let selectedText = '';
+    if (textAreaRef.current) {
+      const start = textAreaRef.current.selectionStart;
+      const end = textAreaRef.current.selectionEnd;
+      if (start !== end) {
+        selectedText = text.substring(start, end);
+      }
+    }
+    const newId = Date.now();
+    setControls([
+      ...controls, 
+      { id: newId, findText: selectedText, replaceText: '', caseSensitive: false }
+    ]);
+    if(selectedText !== '') setAutoFocusControlId(newId);
+
+    // clear highlighted text
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+      textAreaRef.current.setSelectionRange(textAreaRef.current.selectionEnd, textAreaRef.current.selectionEnd);
+    }
   };
 
   return (
@@ -71,6 +90,7 @@ function App() {
               onToggleCase={() => toggleCaseSensitive(control.id)}
               onRemove={() => removeControl(control.id)}
               index={index}
+              autoFocusReplace={control.id === autoFocusControlId}
             />
           ))}
           <button onClick={addControl} className="add-button">
