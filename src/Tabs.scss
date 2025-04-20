@@ -1,0 +1,108 @@
+@import "~compass-mixins/lib/compass/css3";
+
+@import url("https://fonts.googleapis.com/css?family=Lato");
+
+$background: #ffffff;
+$tabs-base-color: #fefefe;
+$add-group-color: #bcecb8;
+$delete-group-color: #f0b3a8;
+
+* {
+  margin: 0;
+  padding: 0; 
+  @include box-sizing(border-box);
+}
+.tabs {
+  list-style: none;
+  position: relative;
+  text-align: left;
+
+  li {
+    float: left;
+    display: block;
+  }
+
+  input[type="radio"] {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+  }
+
+  label {
+    display: block;
+    padding: 6px 15px;
+    border-radius: 2px 2px 0 0;
+    font-size: small;
+    line-height: 1.2;
+    font-weight: normal;
+    background: $tabs-base-color;
+    cursor: pointer;
+    position: relative;
+    top: 2px;
+    @include transition(all 0.2s ease-in-out);
+
+    &:hover {
+      background: darken($tabs-base-color, 12);
+    }
+  }
+  .tab-content{
+    z-index: 2;
+    display: none;
+    width: 100%;
+    padding: 15px;
+    border-radius: 1px 12px 12px 12px;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: darken($tabs-base-color, 5);
+  }
+  //The Magic
+  [id^="tab"]:checked + label { 
+    top: 0;
+    padding-top: -10px;
+    background: darken($tabs-base-color, 5);
+  }
+  [id^="tab"]:checked ~ [id^="tab-content"] {
+    display: block;
+  }
+}
+.tab {
+  margin-top: 23px;
+  color: darken($tabs-base-color, 40);
+}
+
+.add-group-button {
+  margin-left: 25px;
+  padding: 6px 12px;
+  border-radius: 2px 2px 0 0;
+  font-size: smaller;
+  line-height: 1.2;
+  font-weight: normal;
+  background: lighten($add-group-color, 15);
+  cursor: pointer;
+  position: relative;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover {
+    background: lighten($add-group-color, 10);
+    color: darken($add-group-color, 60);
+  }
+}
+
+.delete-group-button {
+  margin-left: 2px;
+  padding: 6px 12px;
+  border-radius: 2px 2px 0 0;
+  font-size: smaller;
+  line-height: 1.2;
+  font-weight: normal;
+  background: lighten($delete-group-color, 15);
+  cursor: pointer;
+  position: relative;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover {
+    background: lighten($delete-group-color, 10);
+    color: darken($delete-group-color, 60);
+  }
+}
