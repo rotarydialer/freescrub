@@ -3,15 +3,14 @@
 @import url("https://fonts.googleapis.com/css?family=Lato");
 
 $background: #ffffff;
-$tabs-base-color: #fafafa;
-$accent-color: #9fbfe9;
+$tabs-base-color: #fefefe;
+$accent-color: #bcecb8;
 * {
   margin: 0;
   padding: 0; 
   @include box-sizing(border-box);
 }
 .tabs {
-  // float: none;
   list-style: none;
   position: relative;
   text-align: left;
@@ -29,7 +28,7 @@ $accent-color: #9fbfe9;
 
   label {
     display: block;
-    padding: 6px 16px;
+    padding: 6px 15px;
     border-radius: 2px 2px 0 0;
     font-size: small;
     line-height: 1.2;
@@ -41,24 +40,24 @@ $accent-color: #9fbfe9;
     @include transition(all 0.2s ease-in-out);
 
     &:hover {
-      background: darken($tabs-base-color, 7);
+      background: darken($tabs-base-color, 12);
     }
   }
   .tab-content{
     z-index: 2;
     display: none;
     width: 100%;
-    padding: 25px;
+    padding: 15px;
     position: absolute;
     top: 50px;
     left: 0;
-    background: darken($tabs-base-color, 4);
+    background: darken($tabs-base-color, 5);
   }
   //The Magic
   [id^="tab"]:checked + label { 
     top: 0;
     padding-top: -10px;
-    background: darken($tabs-base-color, 4);
+    background: darken($tabs-base-color, 5);
   }
   [id^="tab"]:checked ~ [id^="tab-content"] {
     display: block;
@@ -70,10 +69,19 @@ $accent-color: #9fbfe9;
 }
 
 .add-group-button {
-  color: darken($tabs-base-color, 50);
   margin-left: 25px;
+  padding: 6px 12px;
+  border-radius: 2px 2px 0 0;
+  font-size: smaller;
+  line-height: 1.2;
+  font-weight: normal;
+  background: lighten($accent-color, 15);
+  cursor: pointer;
+  position: relative;
+  @include transition(all 0.2s ease-in-out);
 
   &:hover {
-    background: darken($accent-color, 7);
+    background: lighten($accent-color, 10);
+    color: darken($accent-color, 60);
   }
 }
