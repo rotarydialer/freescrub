@@ -129,8 +129,6 @@ function App() {
     setCurrentGroupId(newId);
   };
 
-  const currentGroup = groups.find((g) => g.id === currentGroupId);
-
   return (
     <div className="App">
       <div className="editor-container">
@@ -140,7 +138,7 @@ function App() {
               const tabId = `tab${g.id}`;
               const panelId = `tab-content${g.id}`;
               return (
-                <li key={g.id}>
+                <li key={g.id} className="tab">
                   <input
                     type="radio"
                     name="tabs"
@@ -157,7 +155,6 @@ function App() {
                     role="tabpanel"
                     aria-labelledby={tabId}
                   >
-                    {/* Here’s your ControlsGroup for this tab */}
                     <ControlsGroup
                       groupId={g.id}
                       controls={g.controls}
@@ -185,23 +182,6 @@ function App() {
           </ul>
         </div>
 
-      {/* If you still want the editor outside of the tabs: */}
-        {/* <div className="left-section">
-          <ControlsGroup
-            groupId={currentGroup.id}
-            controls={currentGroup.controls}
-            onChange={updateControl}
-            onToggleCase={toggleCase}
-            onRemove={removeControl}
-            onAddControl={addControl}
-            onReplace={handleReplace}
-            autoFocusControlId={autoFocusControlId}
-            text={text}
-            textAreaRef={textAreaRef}
-            setText={setText}
-            setAutoFocusControlId={setAutoFocusControlId}
-          />
-        </div> */}
         <div className="right-section">
           <textarea
             ref={textAreaRef}
