@@ -126,7 +126,7 @@ function App() {
     const newId = Date.now();
     setGroups([
       ...groups,
-      { id: newId, name: `${groups.length + 1}`, controls: [] }
+      { id: newId, name: `${groups.length + 1}`, controls: defaultControls }
     ]);
     setCurrentGroupId(newId);
   };
