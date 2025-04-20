@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ControlsGroup from './ControlsGroup';
 import './App.css';
+import './Tabs.scss'
 
 function App() {
   // Load or initialize groups
@@ -11,7 +12,7 @@ function App() {
     return [
       {
         id: Date.now(),
-        name: 'Group 1',
+        name: '1',
         controls: [
           { id: 1, findText: '', replaceText: '', caseSensitive: false },
           { id: 2, findText: '', replaceText: '', caseSensitive: false }
@@ -19,10 +20,9 @@ function App() {
       },
       {
         id: Date.now() + 1,
-        name: 'Group 2',
+        name: '2',
         controls: [
           { id: 3, findText: '', replaceText: '', caseSensitive: false },
-          { id: 4, findText: '', replaceText: '', caseSensitive: false }
         ]
       }
     ];
@@ -124,30 +124,69 @@ function App() {
     const newId = Date.now();
     setGroups([
       ...groups,
-      { id: newId, name: `Group ${groups.length + 1}`, controls: [] }
+      { id: newId, name: `${groups.length + 1}`, controls: [] }
     ]);
     setCurrentGroupId(newId);
   };
 
-  const currentGroup = groups.find(g => g.id === currentGroupId);
+  const currentGroup = groups.find((g) => g.id === currentGroupId);
 
   return (
     <div className="App">
-      <div className="group-switcher">
-        {groups.map((g, i) => (
-          <button
-            key={g.id}
-            onClick={() => setCurrentGroupId(g.id)}
-            className={g.id === currentGroupId ? 'active' : ''}
-          >
-            {g.name}
-          </button>
-        ))}
-        <button onClick={addGroup}>+ New Group</button>
-      </div>
-
       <div className="editor-container">
         <div className="left-section">
+          <ul className="tabs" role="tablist">
+            {groups.map((g) => {
+              const tabId = `tab${g.id}`;
+              const panelId = `tab-content${g.id}`;
+              return (
+                <li key={g.id}>
+                  <input
+                    type="radio"
+                    name="tabs"
+                    id={tabId}
+                    defaultChecked={g.id === currentGroupId}
+                    onChange={() => setCurrentGroupId(g.id)}
+                  />
+                  <label htmlFor={tabId} role="tab" tabIndex={0}>
+                    {g.name}
+                  </label>
+                  <div
+                    id={panelId}
+                    className="tab-content"
+                    role="tabpanel"
+                    aria-labelledby={tabId}
+                  >
+                    {/* Here’s your ControlsGroup for this tab */}
+                    <ControlsGroup
+                      groupId={g.id}
+                      controls={g.controls}
+                      onChange={updateControl}
+                      onToggleCase={toggleCase}
+                      onRemove={removeControl}
+                      onAddControl={addControl}
+                      onReplace={handleReplace}
+                      autoFocusControlId={autoFocusControlId}
+                      text={text}
+                      textAreaRef={textAreaRef}
+                      setText={setText}
+                      setAutoFocusControlId={setAutoFocusControlId}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+
+            <li>
+              <button type="button" onClick={addGroup} className="add-group-button">
+                + New Group
+              </button>
+            </li>
+          </ul>
+        </div>
+
+      {/* If you still want the editor outside of the tabs: */}
+        {/* <div className="left-section">
           <ControlsGroup
             groupId={currentGroup.id}
             controls={currentGroup.controls}
@@ -162,12 +201,12 @@ function App() {
             setText={setText}
             setAutoFocusControlId={setAutoFocusControlId}
           />
-        </div>
+        </div> */}
         <div className="right-section">
           <textarea
             ref={textAreaRef}
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             placeholder="Enter your text here…"
           />
         </div>
