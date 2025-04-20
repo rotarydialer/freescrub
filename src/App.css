@@ -9,6 +9,20 @@ h1 {
   font-size: larger;
 }
 
+footer {
+  position: fixed;
+  font-size: x-small;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+footer a {
+  color: rgb(54, 128, 238);
+}
+
 .editor-container {
   display: flex;
   align-items: flex-start;
@@ -19,6 +33,11 @@ h1 {
   margin-right: 3px;
   min-width: 450px;
   max-width: 35rem;
+}
+
+.controls-group {
+  color: rgba(20, 22, 37, 0.329);
+  font-size: smaller;
 }
 
 .controls-section {
@@ -38,6 +57,10 @@ h1 {
   flex: 1;
   padding: 5px;
   min-width: 50px;
+}
+
+.case-toggle {
+  padding: 1px 4px;
 }
 
 .remove-button {
@@ -79,7 +102,7 @@ h1 {
 
 .right-section {
   flex: 1;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 80px);
 }
 
 .right-section textarea {
