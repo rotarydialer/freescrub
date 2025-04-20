@@ -175,7 +175,7 @@ function App() {
             })}
 
             <li onClick={addGroup} className="label tab add-group-button">
-              <div role="tab">
+              <div role="tab" title="Add group">
                 +
               </div>
             </li>

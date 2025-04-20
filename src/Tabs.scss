@@ -4,7 +4,7 @@
 
 $background: #ffffff;
 $tabs-base-color: #fefefe;
-$accent-color: #bcecb8;
+$add-group-color: #bcecb8;
 * {
   margin: 0;
   padding: 0; 
@@ -75,13 +75,13 @@ $accent-color: #bcecb8;
   font-size: smaller;
   line-height: 1.2;
   font-weight: normal;
-  background: lighten($accent-color, 15);
+  background: lighten($add-group-color, 15);
   cursor: pointer;
   position: relative;
   @include transition(all 0.2s ease-in-out);
 
   &:hover {
-    background: lighten($accent-color, 10);
-    color: darken($accent-color, 60);
+    background: lighten($add-group-color, 10);
+    color: darken($add-group-color, 60);
   }
 }
