@@ -4,7 +4,12 @@ import './App.css';
 import './Tabs.scss'
 
 function App() {
-  // Load or initialize groups
+  const defaultControls = [
+    { id: 1, findText: '', replaceText: '', caseSensitive: false },
+    { id: 2, findText: '', replaceText: '', caseSensitive: false }
+  ];
+
+  // Load or initialize groups  
   const [groups, setGroups] = useState(() => {
     const stored = localStorage.getItem('groups');
     if (stored) return JSON.parse(stored);
@@ -13,10 +18,7 @@ function App() {
       {
         id: Date.now(),
         name: '1',
-        controls: [
-          { id: 1, findText: '', replaceText: '', caseSensitive: false },
-          { id: 2, findText: '', replaceText: '', caseSensitive: false }
-        ]
+        controls: defaultControls
       },
       {
         id: Date.now() + 1,
@@ -129,10 +131,31 @@ function App() {
     setCurrentGroupId(newId);
   };
 
+  const deleteGroup = () => {
+    const newGroups = groups.filter((g) => g.id !== currentGroupId);
+  
+    if (newGroups.length > 0) {
+      // update state to the remaining groups and pick the LAST as active
+      const lastGroup = newGroups[newGroups.length - 1];
+      setGroups(newGroups);
+
+      console.log(`Switching to group ${lastGroup.id}`);
+
+      setCurrentGroupId(lastGroup.id); // this isn't working even though the id is correct
+    } else {
+      const newId = Date.now();
+      const freshGroup = { id: newId, name: '1', controls: defaultControls };
+      setGroups([freshGroup]);
+      setCurrentGroupId(newId);
+    }
+  };
+
   return (
     <div className="App">
       <div className="editor-container">
         <div className="left-section">
+          <br></br>
+          <div>Currently selected group: {currentGroupId}</div>
           <ul className="tabs" role="tablist">
             {groups.map((g) => {
               const tabId = `tab${g.id}`;
@@ -143,7 +166,7 @@ function App() {
                     type="radio"
                     name="tabs"
                     id={tabId}
-                    defaultChecked={g.id === currentGroupId}
+                    checked={g.id === currentGroupId}
                     onChange={() => setCurrentGroupId(g.id)}
                   />
                   <label htmlFor={tabId} role="tab" tabIndex={0}>
@@ -177,6 +200,12 @@ function App() {
             <li onClick={addGroup} className="label tab add-group-button">
               <div role="tab" title="Add group">
                 +
+              </div>
+            </li>
+
+            <li onClick={deleteGroup} className="label tab delete-group-button">
+              <div role="tab" title="Delete group">
+              🗑️
               </div>
             </li>
           </ul>

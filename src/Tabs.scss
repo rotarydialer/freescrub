@@ -5,6 +5,8 @@
 $background: #ffffff;
 $tabs-base-color: #fefefe;
 $add-group-color: #bcecb8;
+$delete-group-color: #f0b3a8;
+
 * {
   margin: 0;
   padding: 0; 
@@ -83,5 +85,23 @@ $add-group-color: #bcecb8;
   &:hover {
     background: lighten($add-group-color, 10);
     color: darken($add-group-color, 60);
+  }
+}
+
+.delete-group-button {
+  margin-left: 2px;
+  padding: 6px 12px;
+  border-radius: 2px 2px 0 0;
+  font-size: smaller;
+  line-height: 1.2;
+  font-weight: normal;
+  background: lighten($delete-group-color, 15);
+  cursor: pointer;
+  position: relative;
+  @include transition(all 0.2s ease-in-out);
+
+  &:hover {
+    background: lighten($delete-group-color, 10);
+    color: darken($delete-group-color, 60);
   }
 }
