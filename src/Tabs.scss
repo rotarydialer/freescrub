@@ -4,13 +4,14 @@
 
 $background: #ffffff;
 $tabs-base-color: #fafafa;
+$accent-color: #9fbfe9;
 * {
   margin: 0;
   padding: 0; 
   @include box-sizing(border-box);
 }
 .tabs {
-  float: none;
+  // float: none;
   list-style: none;
   position: relative;
   text-align: left;
@@ -66,4 +67,13 @@ $tabs-base-color: #fafafa;
 .tab {
   margin-top: 23px;
   color: darken($tabs-base-color, 40);
+}
+
+.add-group-button {
+  color: darken($tabs-base-color, 50);
+  margin-left: 25px;
+
+  &:hover {
+    background: darken($accent-color, 7);
+  }
 }
