@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ControlsGroup from './ControlsGroup';
 import './App.css';
-import './Tabs.scss'
+import './Tabs.scss';
 
 function App() {
   const defaultControls = [
@@ -154,8 +154,6 @@ function App() {
     <div className="App">
       <div className="editor-container">
         <div className="left-section">
-          <br></br>
-          <div>Currently selected group: {currentGroupId}</div>
           <ul className="tabs" role="tablist">
             {groups.map((g) => {
               const tabId = `tab${g.id}`;
