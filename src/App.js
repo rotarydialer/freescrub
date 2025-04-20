@@ -1,112 +1,174 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ControlsSection from './ControlsSection';
+import ControlsGroup from './ControlsGroup';
 import './App.css';
 
 function App() {
-  const [text, setText] = useState('');
-  const [controls, setControls] = useState(() => {
-    const storedControls = localStorage.getItem('controls');
-    return storedControls 
-      ? JSON.parse(storedControls) 
-      : [
+  // Load or initialize groups
+  const [groups, setGroups] = useState(() => {
+    const stored = localStorage.getItem('groups');
+    if (stored) return JSON.parse(stored);
+    // default: two groups, each with two controls
+    return [
+      {
+        id: Date.now(),
+        name: 'Group 1',
+        controls: [
           { id: 1, findText: '', replaceText: '', caseSensitive: false },
-          { id: 2, findText: '', replaceText: '', caseSensitive: false },
-        ];
+          { id: 2, findText: '', replaceText: '', caseSensitive: false }
+        ]
+      },
+      {
+        id: Date.now() + 1,
+        name: 'Group 2',
+        controls: [
+          { id: 3, findText: '', replaceText: '', caseSensitive: false },
+          { id: 4, findText: '', replaceText: '', caseSensitive: false }
+        ]
+      }
+    ];
   });
+
+  const [currentGroupId, setCurrentGroupId] = useState(groups[0].id);
   const [autoFocusControlId, setAutoFocusControlId] = useState(null);
+  const [text, setText] = useState('');
   const textAreaRef = useRef(null);
 
+  // Persist groups whenever they change
   useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.focus();
-    }
+    localStorage.setItem('groups', JSON.stringify(groups));
+  }, [groups]);
+
+  // Focus textarea on mount
+  useEffect(() => {
+    textAreaRef.current?.focus();
   }, []);
 
-  // Save controls to localStorage
-  useEffect(() => {
-    localStorage.setItem('controls', JSON.stringify(controls));
-  }, [controls]);
-
-  const updateControl = (id, field, value) => {
-    setControls(controls.map(control =>
-      control.id === id ? { ...control, [field]: value } : control
+  // Helper to update one control in one group
+  const updateControl = (groupId, ctrlId, field, value) => {
+    setGroups(groups.map(g =>
+      g.id === groupId
+        ? {
+            ...g,
+            controls: g.controls.map(c =>
+              c.id === ctrlId ? { ...c, [field]: value } : c
+            )
+          }
+        : g
     ));
   };
 
-  const toggleCaseSensitive = (id) => {
-    setControls(controls.map(control =>
-      control.id === id ? { ...control, caseSensitive: !control.caseSensitive } : control
+  const toggleCase = (groupId, ctrlId) => {
+    setGroups(groups.map(g =>
+      g.id === groupId
+        ? {
+            ...g,
+            controls: g.controls.map(c =>
+              c.id === ctrlId ? { ...c, caseSensitive: !c.caseSensitive } : c
+            )
+          }
+        : g
     ));
   };
 
-  const removeControl = (id) => {
-    setControls(controls.filter(control => control.id !== id));
+  const removeControl = (groupId, ctrlId) => {
+    setGroups(groups.map(g =>
+      g.id === groupId
+        ? { ...g, controls: g.controls.filter(c => c.id !== ctrlId) }
+        : g
+    ));
   };
 
-  const handleReplace = () => {
-    let newText = text;
-    controls.forEach(control => {
-      if (control.findText) {
-        const flags = control.caseSensitive ? 'g' : 'gi'; // case sensitivity
-        const regex = new RegExp(control.findText, flags);
-        newText = newText.replace(regex, control.replaceText);
-      }
-    });
-    setText(newText);
-  };
-
-  const addControl = () => {
-    let selectedText = '';
-    if (textAreaRef.current) {
-      const start = textAreaRef.current.selectionStart;
-      const end = textAreaRef.current.selectionEnd;
-      if (start !== end) {
-        selectedText = text.substring(start, end);
-      }
+  const addControl = (groupId, fullText, taRef, setAutoId) => {
+    let selected = '';
+    const ta = taRef.current;
+    if (ta) {
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      if (start !== end) selected = fullText.slice(start, end);
     }
     const newId = Date.now();
-    setControls([
-      ...controls, 
-      { id: newId, findText: selectedText, replaceText: '', caseSensitive: false }
-    ]);
-    if(selectedText !== '') setAutoFocusControlId(newId);
+    setGroups(groups.map(g =>
+      g.id === groupId
+        ? {
+            ...g,
+            controls: [
+              ...g.controls,
+              { id: newId, findText: selected, replaceText: '', caseSensitive: false }
+            ]
+          }
+        : g
+    ));
+    if (selected) setAutoId(newId);
 
-    // clear highlighted text
-    if (textAreaRef.current) {
-      textAreaRef.current.focus();
-      textAreaRef.current.setSelectionRange(textAreaRef.current.selectionEnd, textAreaRef.current.selectionEnd);
+    // clear selection
+    if (ta) {
+      ta.focus();
+      ta.setSelectionRange(ta.selectionEnd, ta.selectionEnd);
     }
   };
+
+  const handleReplace = (groupId, fullText, setFullText) => {
+    const group = groups.find(g => g.id === groupId);
+    if (!group) return;
+    let result = fullText;
+    group.controls.forEach(c => {
+      if (c.findText) {
+        const flags = c.caseSensitive ? 'g' : 'gi';
+        result = result.replace(new RegExp(c.findText, flags), c.replaceText);
+      }
+    });
+    setFullText(result);
+  };
+
+  // Add a new empty group
+  const addGroup = () => {
+    const newId = Date.now();
+    setGroups([
+      ...groups,
+      { id: newId, name: `Group ${groups.length + 1}`, controls: [] }
+    ]);
+    setCurrentGroupId(newId);
+  };
+
+  const currentGroup = groups.find(g => g.id === currentGroupId);
 
   return (
     <div className="App">
+      <div className="group-switcher">
+        {groups.map((g, i) => (
+          <button
+            key={g.id}
+            onClick={() => setCurrentGroupId(g.id)}
+            className={g.id === currentGroupId ? 'active' : ''}
+          >
+            {g.name}
+          </button>
+        ))}
+        <button onClick={addGroup}>+ New Group</button>
+      </div>
+
       <div className="editor-container">
         <div className="left-section">
-          {controls.map((control, index) => (
-            <ControlsSection
-              key={control.id}
-              control={control}
-              onChange={(field, value) => updateControl(control.id, field, value)}
-              onToggleCase={() => toggleCaseSensitive(control.id)}
-              onRemove={() => removeControl(control.id)}
-              index={index}
-              autoFocusReplace={control.id === autoFocusControlId}
-            />
-          ))}
-          <button onClick={addControl} className="add-button">
-            +
-          </button>
-          <button onClick={handleReplace} className="replace-button">
-            Replace All
-          </button>
+          <ControlsGroup
+            groupId={currentGroup.id}
+            controls={currentGroup.controls}
+            onChange={updateControl}
+            onToggleCase={toggleCase}
+            onRemove={removeControl}
+            onAddControl={addControl}
+            onReplace={handleReplace}
+            autoFocusControlId={autoFocusControlId}
+            text={text}
+            textAreaRef={textAreaRef}
+            setText={setText}
+            setAutoFocusControlId={setAutoFocusControlId}
+          />
         </div>
         <div className="right-section">
           <textarea
             ref={textAreaRef}
             value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows="15"
-            placeholder="Enter your text here..."
+            onChange={e => setText(e.target.value)}
+            placeholder="Enter your text here…"
           />
         </div>
       </div>
